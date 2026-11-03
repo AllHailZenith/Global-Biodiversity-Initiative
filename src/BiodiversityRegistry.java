@@ -20,21 +20,48 @@ public class BiodiversityRegistry {
                 String name = fileScanner.nextLine().trim();
 
                 if (!name.isEmpty()) {
-                    if (species.containsKey(name)) {
-                        species.put(name, species.get(name) + 1);
-                    } else {
-                        species.put(name, 1);
-                    }
+                    species.put(name, species.getOrDefault(name, 0) + 1);
                 }
             }
 
             fileScanner.close();
 
-            System.out.println("Species populations:");
-            System.out.println(species);
-
         } catch (FileNotFoundException e) {
             System.out.println("Field report not found.");
         }
+
+        if (species.isEmpty()) {
+            System.out.println("No species found.");
+            return;
+        }
+
+        String mostFrequentSpecies = "";
+        String leastFrequentSpecies = "";
+
+        int maxCount = Integer.MIN_VALUE;
+        int minCount = Integer.MAX_VALUE;
+
+        for (String name : species.keySet()) {
+            int count = species.get(name);
+
+            if (count > maxCount) {
+                maxCount = count;
+                mostFrequentSpecies = name;
+            }
+
+            if (count < minCount) {
+                minCount = count;
+                leastFrequentSpecies = name;
+            }
+        }
+
+        System.out.println("Species populations:");
+        System.out.println(species);
+
+        System.out.println("Most frequent: " +
+                mostFrequentSpecies + " - " + maxCount);
+
+        System.out.println("Least frequent: " +
+                leastFrequentSpecies + " - " + minCount);
     }
 }
